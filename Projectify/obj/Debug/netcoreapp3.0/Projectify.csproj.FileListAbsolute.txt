@@ -136,4 +136,11 @@ C:\Users\aymen\source\repos\belhadjhmida\Projectify_BackEnd\Projectify\bin\Debug
 C:\Users\aymen\source\repos\belhadjhmida\Projectify_BackEnd\Projectify\bin\Debug\netcoreapp3.0\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\aymen\source\repos\belhadjhmida\Projectify_BackEnd\Projectify\bin\Debug\netcoreapp3.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\aymen\source\repos\belhadjhmida\Projectify_BackEnd\Projectify\bin\Debug\netcoreapp3.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\aymen\source\repos\belhadjhmida\Projectify_BackEnd\Projectify\bin\Debug\netcoreapp3.0\Microsoft.OpenApi.dll
+C:\Users\aymen\source\repos\belhadjhmida\Projectify_BackEnd\Projectify\bin\Debug\netcoreapp3.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\aymen\source\repos\belhadjhmida\Projectify_BackEnd\Projectify\bin\Debug\netcoreapp3.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\aymen\source\repos\belhadjhmida\Projectify_BackEnd\Projectify\bin\Debug\netcoreapp3.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\aymen\source\repos\belhadjhmida\Projectify_BackEnd\Projectify\bin\Debug\netcoreapp3.0\Castle.Core.dll
+C:\Users\aymen\source\repos\belhadjhmida\Projectify_BackEnd\Projectify\bin\Debug\netcoreapp3.0\Microsoft.EntityFrameworkCore.Proxies.dll
+C:\Users\aymen\source\repos\belhadjhmida\Projectify_BackEnd\Projectify\obj\Debug\netcoreapp3.0\Projectify.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\aymen\source\repos\belhadjhmida\Projectify_BackEnd\Projectify\obj\Debug\netcoreapp3.0\Projectify.MvcApplicationPartsAssemblyInfo.cache

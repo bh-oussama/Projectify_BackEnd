@@ -22,8 +22,8 @@ public class TaskService : ITaskService {
     public IEnumerable<Projectify.Models.Task> GetTasks(int projectID)
     {
         Project project = _context.Projects.Include(p => p.Sprints).ThenInclude(s => s.Tasks).Where(p => p.ProjectID == projectID).SingleOrDefault();
-        List<Projectify.Models.Task> tasks = new List<Projectify.Models.Task>();
-        project.Sprints.ForEach(s => { tasks.AddRange(s.Tasks); });
+        List<int> sprintIDs = _context.Sprints.Where(s => s.ProjectID == project.ProjectID).Select(s => s.SprintID).ToList();
+        List<Projectify.Models.Task> tasks = _context.Tasks.Where(t => sprintIDs.Any(s => s == t.SprintID)).ToList();
         return tasks;
     }
 
@@ -43,7 +43,6 @@ public class TaskService : ITaskService {
             TaskEndedAt = "",
         };
         newTask.Sprint = sprint;
-        sprint.Tasks.Add(newTask);
 
         try
         {
@@ -99,7 +98,12 @@ public class TaskService : ITaskService {
 
     public bool UpdateTask(Projectify.Models.Task task)
     {
-        Debug.WriteLine("ddddddddddddddd" + task.TaskID);
+        Debug.WriteLine(task.TaskID);
+        Debug.WriteLine(task.TaskName);
+        Debug.WriteLine(task.TaskPriority);
+        Debug.WriteLine(task.TaskState);
+        Debug.WriteLine(task.TaskStartedAt);
+
         Projectify.Models.Task taskToChange = _context.Tasks.Where(t => t.TaskID == task.TaskID).SingleOrDefault();
         taskToChange.TaskDescription = task.TaskDescription;
         taskToChange.TaskName = task.TaskName;
@@ -116,6 +120,37 @@ public class TaskService : ITaskService {
             return false;
         }
 
+    }
+
+    public bool DeleteTask(int taskID)
+    {
+      
+        Projectify.Models.Task task = _context.Tasks.Where(t => t.TaskID == taskID).SingleOrDefault();
+        _context.Tasks.Remove(task);
+        try
+        {
+            _context.SaveChanges();
+            return true;
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine(e.StackTrace);
+            return false;
+        }
+
+    }
+
+    public Dictionary<String, String> GetCompletedTasksPerSprint(int projectID)
+    {
+        Dictionary<string, string> completedTasksPerSprintMap = new Dictionary<string, string>();
+        Project project = _context.Projects.Where(p => p.ProjectID == projectID).SingleOrDefault();
+        foreach(Sprint sprint in _context.Sprints)
+        {
+            List<Projectify.Models.Task> tasksPerSprint = _context.Tasks.Where(t => t.SprintID == sprint.SprintID).ToList();
+            List<Projectify.Models.Task> completedTasksPerSprint = tasksPerSprint.Where(t => t.TaskState == "Done").ToList();
+            completedTasksPerSprintMap.Add(sprint.SprintName, completedTasksPerSprint.Count.ToString());
+        }
+        return completedTasksPerSprintMap;
     }
 
 

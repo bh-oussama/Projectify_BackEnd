@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Projectify.Models
@@ -12,6 +13,8 @@ namespace Projectify.Models
     {
 
         public static List<string> TASK_STATES = new List<string>() { "Pending", "InProgress", "Done" };
+        [ForeignKey("Sprint")]
+        public virtual int SprintID { get; set; }
         public int TaskID { get; set; }
         public string TaskName { get; set; }
         public string TaskPriority { get; set; }
@@ -20,6 +23,7 @@ namespace Projectify.Models
         public string TaskStartedAt { get; set; }
         public string TaskEndedAt { get; set; }
 
+        [JsonIgnore]
         public virtual Sprint Sprint { get; set; }
 
         public Task()

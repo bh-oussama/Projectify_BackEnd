@@ -101,12 +101,7 @@ namespace Projectify.Controllers
                 _userManager.CreateAsync(NewUser, model.Password).Wait();
                 return Ok(
                 );
-
-
-
             }
-            
-
         }
 
         [Authorize]
@@ -119,6 +114,18 @@ namespace Projectify.Controllers
             return Ok(new
             {
                 result = user
+            });
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("getrole")]
+        public IActionResult GetRole(string userID,int projectID)
+        {
+            string role = _context.RoleProjectUsers.Where(r => (r.ProjectID == projectID && r.UserID == userID)).SingleOrDefault().Role;
+            return Ok(new
+            {
+                role = role
             });
         }
     }

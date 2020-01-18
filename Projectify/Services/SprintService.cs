@@ -31,7 +31,6 @@ namespace Projectify.Services
                 SprintDateEnd = sprintDateEnd
             };
             newSprint.Project = project;
-            project.Sprints.Add(newSprint);
             try
             {
                 _context.Sprints.Add(newSprint);
@@ -43,6 +42,11 @@ namespace Projectify.Services
                 Debug.WriteLine(e.StackTrace);
                 return null;
             }
+        }
+
+        public IEnumerable<Sprint> GetSprints(int projectID)
+        {
+            return _context.Sprints.Where(s => s.ProjectID == projectID);
         }
     }
 }

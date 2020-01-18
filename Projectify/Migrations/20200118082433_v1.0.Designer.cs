@@ -10,7 +10,7 @@ using Projectify.Database;
 namespace Projectify.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20200117061243_v1.0")]
+    [Migration("20200118082433_v1.0")]
     partial class v10
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -275,7 +275,7 @@ namespace Projectify.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ProjectID")
+                    b.Property<int>("ProjectID")
                         .HasColumnType("int");
 
                     b.Property<string>("SprintDateEnd")
@@ -301,7 +301,7 @@ namespace Projectify.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("SprintID")
+                    b.Property<int>("SprintID")
                         .HasColumnType("int");
 
                     b.Property<string>("TaskDescription")
@@ -336,7 +336,7 @@ namespace Projectify.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ProjectID")
+                    b.Property<int>("ProjectID")
                         .HasColumnType("int");
 
                     b.Property<string>("TeamDescription")
@@ -414,21 +414,27 @@ namespace Projectify.Migrations
                 {
                     b.HasOne("Projectify.Models.Project", "Project")
                         .WithMany("Sprints")
-                        .HasForeignKey("ProjectID");
+                        .HasForeignKey("ProjectID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Projectify.Models.Task", b =>
                 {
                     b.HasOne("Projectify.Models.Sprint", "Sprint")
                         .WithMany("Tasks")
-                        .HasForeignKey("SprintID");
+                        .HasForeignKey("SprintID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Projectify.Models.Team", b =>
                 {
                     b.HasOne("Projectify.Models.Project", "Project")
                         .WithMany("Teams")
-                        .HasForeignKey("ProjectID");
+                        .HasForeignKey("ProjectID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

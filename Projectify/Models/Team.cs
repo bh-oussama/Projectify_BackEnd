@@ -10,15 +10,14 @@ namespace Projectify.Models
 {
     public class Team
     {
+        [ForeignKey("Project")]
+        public virtual int ProjectID { get; set; }
         public int TeamID { get; set; }
         public string TeamName { get; set; }
         public string TeamDescription { get; set; }
-
-        public virtual List<ApplicationUser> TeamMembers { get; set; }
         public virtual Project Project { get; set; }
-
-        public Team(string TeamName = "", string TeamDescription = "") {
-            Project = null;
+        public virtual List<ApplicationUser> TeamMembers { get; set; }
+        public Team() {
         }
     }
 }

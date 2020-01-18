@@ -20,6 +20,12 @@ namespace Projectify.Database
 
             Builder.Entity<RoleProjectUser>()
             .HasKey(o => new { o.UserID, o.ProjectID,o.Role });
+
+            Builder.Entity<Project>().HasMany(p => p.Sprints).WithOne(s => s.Project).HasForeignKey(p => p.ProjectID);
+
+        
+
+
         }
 
         public virtual DbSet<Project> Projects { get; set; }

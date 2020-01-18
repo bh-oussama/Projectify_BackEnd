@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\aymen\\source\\repos\\belhadjhmida\\Projectify_BackEnd\\Projectify\\Projectify.csproj": {}
+    "C:\\Users\\aymen\\Desktop\\New folder\\Projectify\\Projectify.csproj": {}
   },
   "projects": {
-    "C:\\Users\\aymen\\source\\repos\\belhadjhmida\\Projectify_BackEnd\\Projectify\\Projectify.csproj": {
+    "C:\\Users\\aymen\\Desktop\\New folder\\Projectify\\Projectify.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\aymen\\source\\repos\\belhadjhmida\\Projectify_BackEnd\\Projectify\\Projectify.csproj",
+        "projectUniqueName": "C:\\Users\\aymen\\Desktop\\New folder\\Projectify\\Projectify.csproj",
         "projectName": "Projectify",
-        "projectPath": "C:\\Users\\aymen\\source\\repos\\belhadjhmida\\Projectify_BackEnd\\Projectify\\Projectify.csproj",
+        "projectPath": "C:\\Users\\aymen\\Desktop\\New folder\\Projectify\\Projectify.csproj",
         "packagesPath": "C:\\Users\\aymen\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\aymen\\source\\repos\\belhadjhmida\\Projectify_BackEnd\\Projectify\\obj\\",
+        "outputPath": "C:\\Users\\aymen\\Desktop\\New folder\\Projectify\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\aymen\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -54,6 +54,10 @@
               "target": "Package",
               "version": "[3.1.1, )"
             },
+            "Microsoft.EntityFrameworkCore.Proxies": {
+              "target": "Package",
+              "version": "[3.1.1, )"
+            },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
               "version": "[3.1.0, )"
@@ -75,6 +79,10 @@
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[12.0.3, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[5.0.0-rc5, )"
             }
           },
           "imports": [

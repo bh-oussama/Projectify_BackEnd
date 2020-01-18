@@ -9,6 +9,8 @@ namespace Projectify.IServices
         bool ChangeTaskState(int taskID, string taskState);
         bool UpdateTask(Projectify.Models.Task task);
         IEnumerable<Projectify.Models.Task> GetTasks(int projectID);
+        bool DeleteTask(int taskID);
+        Dictionary<String, String> GetCompletedTasksPerSprint(int projectID);
  
     }
 }

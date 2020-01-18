@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -26,18 +27,21 @@ public class AdminController : ControllerBase
     private readonly ITaskService _taskService;
     private readonly ITeamService _teamService;
     private readonly ISprintService _sprintService;
+    private IHttpContextAccessor _httpContextAccessor;
 
-    public AdminController(IServiceProvider serviceProvider, IConfiguration configuration)
+    public AdminController(IServiceProvider serviceProvider, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
     {
         _userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         _singInManager = serviceProvider.GetRequiredService<SignInManager<ApplicationUser>>();
         _configuration = configuration;
         _roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
         _context = serviceProvider.GetRequiredService<ApplicationContext>();
+        _httpContextAccessor = httpContextAccessor;
         _projectService = new ProjectService(_context, _userManager);
         _taskService = new TaskService(_context, _userManager);
         _teamService = new TeamService(_context, _userManager);
         _sprintService = new SprintService(_context, _userManager);
+
     }
 
     [Authorize]
@@ -113,8 +117,30 @@ public class AdminController : ControllerBase
         }
     }
 
-     
-    
+    [Authorize]
+    [HttpDelete]
+    [Route("deletetask")]
+    public IActionResult DeleteTask([FromQuery(Name = "taskID")] int taskID)
+    {
+
+        switch (_taskService.DeleteTask(taskID))
+        {
+            case true:
+                return Ok(new
+                {
+                    state = "Task deleted successfully"
+                });
+            default:
+                return BadRequest(new
+                {
+                    userMessage = "Operation was unsuccessful",
+                    errorCode = "Something went wrong"
+                });
+        }
+    }
+
+
+
     [Authorize]
     [HttpPost]
     [Route("createtask")]
@@ -191,10 +217,24 @@ public class AdminController : ControllerBase
         Project project = _projectService.getProject(projectID);
         return Ok(new
         {  
-            result = project
+            result = project,
+            sprints = project.Sprints
         });
     }
 
+    [Authorize]
+    [HttpGet]
+    [Route("getusers")]
+    public IActionResult GetUsers()
+    {
+        string userID = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserID").Value;
+        IEnumerable<ApplicationUser> users = _context.Users.Where(u => u.Id != userID);
+        return Ok(new
+        {
+            result = users
+        });
+    }
+   
     [Authorize]
     [HttpGet]
     [Route("gettasks")]
@@ -206,54 +246,142 @@ public class AdminController : ControllerBase
             result = tasks
         });
     }
-    
 
-
-
-
-
-
-
-
-
-        /* [Authorize]
-         [HttpPut]
-         [Route("changeprojectname")]
-         public IActionResult ChangeProjectName([FromQuery(Name = "projectID")] int projectID, [FromBody] string projectName)
-         {
-             switch (_projectService.ChangeProjectName(projectID, projectName))
-             {
-                 case 0:
-                     return Ok(new
-                     {
-                         state = "Project's name changed successfully"
-                     });
-                 default:
-                     return BadRequest(new
-                     {
-                         state = "Something went wrong"
-                     });
-             }
-         }
-
-         [Authorize]
-         [HttpPut]
-         [Route("changeprojectstate")]
-         public IActionResult ChangeProjectState([FromQuery(Name = "projectID")] int projectID, [FromBody] string projectState)
-         {
-             switch (_projectService.ChangeProjectState(projectID, projectState))
-             {
-                 case 0:
-                     return Ok(new
-                     {
-                         state = "Project's state changed successfully"
-                     });
-                 default:
-                     return BadRequest(new
-                     {
-                         state = "Something went wrong"
-                     });
-             }
-         }*/
+    [Authorize]
+    [HttpPost]
+    [Route("changetaskstate")]
+    public IActionResult ChangeTaskState([FromQuery(Name = "taskID")]int taskID,[FromBody] string taskState)
+    {
+      
+        bool response = _taskService.ChangeTaskState(taskID, taskState);
+        switch (response)
+        {
+            case false:
+                return BadRequest(new
+                {
+                    userMessage = "Operation was unsuccessful",
+                    errorCode = "Something went wrong"
+                });
+            default:
+                return Ok();
+        };
     }
+
+    [Authorize]
+    [HttpGet]
+    [Route("getteams")]
+    public IActionResult GetTeams([FromQuery(Name = "projectID")]int projectID)
+    {
+        IEnumerable<Team> teams = _teamService.GetTeams(projectID);
+        return Ok(new
+        {
+            result = teams
+        });
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("getmembersperteam")]
+    public IActionResult GetMembersPerTeam([FromQuery(Name = "teamID")]int teamID)
+    {
+        IEnumerable<Team> teams = _teamService.GetTeams(teamID);
+        return Ok(new
+        {
+            result = teams
+        });
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("getsprints")]
+    public IActionResult GetSprints([FromQuery(Name = "projectID")]int projectID)
+    {
+        IEnumerable<Sprint> sprints = _sprintService.GetSprints(projectID);
+        return Ok(new
+        {
+            result = sprints.ToList()
+        });
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("createteam")]
+    public IActionResult CreateTeam([FromQuery(Name = "projectID")]int projectID, Object obj)
+    {
+        Team team = JsonSerializer.Deserialize<Team>(obj.ToString());
+         Team newTeam = _teamService.CreateTeam(projectID, team.TeamName, team.TeamDescription);
+         switch (newTeam)
+         {
+             case null:
+                 return BadRequest(new
+                 {
+                     userMessage = "Operation was unsuccessful",
+                     errorCode = "Something went wrong"
+                 });
+             default:
+                 return Created("", new
+                 {
+                     teamID = newTeam.TeamID
+
+                 });
+         };
+    }
+    [Authorize]
+    [HttpPost]
+    [Route("removememberfromteam")]
+    public IActionResult RemoveMemberFromTeam([FromQuery(Name = "teamID")]int teamID, [FromQuery(Name = "memberID")]string memberID)
+    {
+        bool response = _teamService.RemoveMemberFromTeam(teamID, memberID);
+
+        switch (response)
+        {
+            case false:
+                return BadRequest(new
+                {
+                    userMessage = "Operation was unsuccessful",
+                    errorCode = "Something went wrong"
+                });
+            default:
+                return Ok();
+        };
+    }
+     
+    [Authorize]
+    [HttpPost]
+    [Route("addmembertoteam")]
+    public IActionResult AddMemberToTeam([FromQuery(Name = "teamID")]int teamID, [FromQuery(Name = "memberID")]string memberID)
+    {
+        bool response = _teamService.AddMemberToTeam(teamID, memberID);
+
+
+        switch (response)
+        {
+            case false:
+                return BadRequest(new
+                {
+                    userMessage = "Operation was unsuccessful",
+                    errorCode = "Something went wrong"
+                });
+            default:
+                return Ok();
+        };
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("getctaskspersprint")]
+    public IActionResult GetCompletedTasksPerSprint([FromQuery(Name = "projectID")]int projectID)
+    {
+        Dictionary<string,string> response = _taskService.GetCompletedTasksPerSprint(projectID);
+      
+
+                return Ok(new
+                {
+                    result = response
+                });
+   
+    }
+
+
+}
 

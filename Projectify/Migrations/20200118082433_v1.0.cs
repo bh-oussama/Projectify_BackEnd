@@ -76,10 +76,10 @@ namespace Projectify.Migrations
                 {
                     SprintID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    ProjectID = table.Column<int>(nullable: false),
                     SprintName = table.Column<string>(nullable: true),
                     SprintDateStart = table.Column<string>(nullable: true),
-                    SprintDateEnd = table.Column<string>(nullable: true),
-                    ProjectID = table.Column<int>(nullable: true)
+                    SprintDateEnd = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -89,7 +89,7 @@ namespace Projectify.Migrations
                         column: x => x.ProjectID,
                         principalTable: "Projects",
                         principalColumn: "ProjectID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -98,9 +98,9 @@ namespace Projectify.Migrations
                 {
                     TeamID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    ProjectID = table.Column<int>(nullable: false),
                     TeamName = table.Column<string>(nullable: true),
-                    TeamDescription = table.Column<string>(nullable: true),
-                    ProjectID = table.Column<int>(nullable: true)
+                    TeamDescription = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -110,7 +110,7 @@ namespace Projectify.Migrations
                         column: x => x.ProjectID,
                         principalTable: "Projects",
                         principalColumn: "ProjectID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -119,13 +119,13 @@ namespace Projectify.Migrations
                 {
                     TaskID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    SprintID = table.Column<int>(nullable: false),
                     TaskName = table.Column<string>(nullable: true),
                     TaskPriority = table.Column<string>(nullable: true),
                     TaskDescription = table.Column<string>(nullable: true),
                     TaskState = table.Column<string>(nullable: true),
                     TaskStartedAt = table.Column<string>(nullable: true),
-                    TaskEndedAt = table.Column<string>(nullable: true),
-                    SprintID = table.Column<int>(nullable: true)
+                    TaskEndedAt = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -135,7 +135,7 @@ namespace Projectify.Migrations
                         column: x => x.SprintID,
                         principalTable: "Sprints",
                         principalColumn: "SprintID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
